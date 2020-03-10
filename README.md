@@ -1030,8 +1030,6 @@ If you have a single character (a string of one or two code units), you can use 
   ```js
   try {
     // ...
-  } catch (error) {
-    // ...
   } finally {
     // ...
   }
@@ -1056,7 +1054,7 @@ If you have a single character (a string of one or two code units), you can use 
   for (;;) {
     try {
       let dir = promptDirection("Where?");
-      console.log("You chose ", dir);
+      console.log("You chose", dir);
       break;
     } catch (e) {
       if (e instanceof InputError) {
@@ -1066,5 +1064,60 @@ If you have a single character (a string of one or two code units), you can use 
       }
     }
   }
+  ```
+  {: .force-newline}
+
+## (Misc.) The Date Class - JavaScript Class for Representing Dates
+
+- Current date and time
+  ```js
+  console.log(new Date());
+  // → Wed Mar 11 2020 16:19:11 GMT+0900 (Korean Standard Time)
+  ```
+  {: .force-newline}
+
+- Specific date and time
+  ```js
+  console.log(new Date(2009, 11, 9));
+  // → Wed Dec 09 2009 00:00:00 GMT+0100 (CET)
+  console.log(new Date(2009, 11, 9, 12, 59, 59, 999));
+  // → Wed Dec 09 2009 12:59:59 GMT+0100 (CET)
+  ```
+  {: .force-newline}
+
+- JavaScript uses a convention where **month numbers start at zero** (so December is 11), yet **day numbers start at one**. This is confusing and silly. Be careful!!!!!!! The last four arguments (hours, minutes, seconds, and milliseconds) to `Date` are optional and taken to be zero when not given.
+
+- Timestamp ("Unix time") of current date and time
+  ```js
+  console.log(Date.now());
+  // → 1583856914237
+  ```
+  {: .force-newline}
+
+- Timestamp to and from `Date` object
+  ```js
+  console.log(new Date(2013, 11, 19).getTime());
+  // → 1387407600000
+  console.log(new Date(1387407600000));
+  // → Thu Dec 19 2013 00:00:00 GMT+0100 (CET)
+  ```
+  {: .force-newline}
+
+- `Date` methods
+  ```js
+  now = new Date();
+
+  console.log(now.getFullYear());
+  // → 2020
+  console.log(now.getMonth());
+  // → 2  (*March*)
+  console.log(now.getDate());
+  // → 14
+  console.log(now.getHours());
+  // → 16
+  console.log(now.getMinutes());
+  // → 20
+  console.log(now.getSeconds());
+  // → 42
   ```
   {: .force-newline}
