@@ -932,3 +932,139 @@ If you have a single character (a string of one or two code units), you can use 
   // → 5
   ```
   {: .force-newline}
+
+## 08. Bugs and Errors
+
+### Strict mode
+
+- JavaScript can be made a little stricter by enabling *strict mode*. This is done by putting the string `"use strict"` at the top of a file or a function body.
+
+- Normally, when you forget to put `let` in front of your binding, as in the following example, JavaScript quietly creates a global binding and uses that. In strict mode, an error is reported instead. (Note, however, that this doesn’t work when the binding in question already exists as a global binding. In that case, the loop will still quietly overwrite the value of the binding.)
+  ```js
+  function canYouSpotTheProblem() {
+    "use strict";
+    for (counter = 0; counter < 10; counter++) {
+      console.log("Happy happy");
+    }
+  }
+
+  canYouSpotTheProblem();
+  // → ReferenceError: counter is not defined
+  ```
+  {: .force-newline}
+
+- Another change in strict mode is that the `this` binding holds the value `undefined` in functions that are not called as methods. When making such a call outside of strict mode, `this` refers to the global scope object, which is an object whose properties are the global bindings.
+  ```js
+  function Person(name) { this.name = name; }
+  let ferdinand = Person("Ferdinand"); // forgot new
+  console.log(name);
+  // → Ferdinand
+  ```
+  vs
+  ```js
+  "use strict";
+  function Person(name) { this.name = name; }
+  let ferdinand = Person("Ferdinand"); // forgot new
+  // → TypeError: Cannot set property 'name' of undefined
+  ```
+  {: .force-newline}
+
+### Debugging
+
+- When coding in JavaScript, you can set a *breakpoint* by including a `debugger` statement (consisting of simply that keyword) in your program. If the developer tools of your browser are active, the program will pause whenever it reaches such a statement.
+
+- Most browsers come with the ability to set a breakpoint on a specific line of your code. When the execution of the program reaches a line with a breakpoint, it is paused, and you can inspect the values of bindings at that point.
+
+### Exceptions
+
+- Throwing exceptions (`throw`):
+  ```js
+  function promptDirection(question) {
+    let result = prompt(question);
+    if (result.toLowerCase() == "left") return "L";
+    if (result.toLowerCase() == "right") return "R";
+    throw new Error("Invalid direction: " + result);
+  }
+
+  function look() {
+    if (promptDirection("Which way?") == "L") {
+      return "a house";
+    } else {
+      return "two angry bears";
+    }
+  }
+  ```
+  {: .force-newline}
+
+- Catching exceptions (`try/catch`):
+  ```js
+  try {
+    console.log("You see", look());
+  } catch (error) {
+    console.log(error);
+  }
+  ```
+  {: .force-newline}
+
+- Error message:
+  ```js
+  console.log(error);
+  // → Error: Invalid direction: Down
+  ```
+  {: .force-newline}
+
+- Stack trace (stored in `stack` property of caught error):
+  ```js
+  console.log(error.stack);
+  // → Error: Invalid direction: Down
+  //     at promptDirection (codef70ca2a6:5:9)
+  //     at look (codef70ca2a6:9:7)
+  //     at eval (codef70ca2a6:17:26)
+  //     ...
+  ```
+  {: .force-newline}
+
+- When an exception makes it all the way to the bottom of the stack without being caught, it gets handled by the environment. What this means differs between environments. In browsers, a description of the error typically gets written to the JavaScript console (reachable through the browser’s Tools or Developer menu). Node.js is more careful about data corruption. It aborts the whole process when an unhandled exception occurs.
+
+- A `finally` block may follow a `try` block, *instead of* or *in addition to* a `catch` block. It indicates "no matter *what* happens, run this code after trying to run the code in the `try` block." After the `finally` block runs, the stack continues unwinding.
+  ```js
+  try {
+    // ...
+  } catch (error) {
+    // ...
+  } finally {
+    // ...
+  }
+  ```
+  {: .force-newline}
+
+- Writing custom exceptions:
+  ```js
+  class InputError extends Error {}
+
+  function promptDirection(question) {
+    let result = prompt(question);
+    if (result.toLowerCase() == "left") return "L";
+    if (result.toLowerCase() == "right") return "R";
+    throw new InputError("Invalid direction: " + result);
+  }
+  ```
+  {: .force-newline}
+
+- Selectively catching exceptions:
+  ```js
+  for (;;) {
+    try {
+      let dir = promptDirection("Where?");
+      console.log("You chose ", dir);
+      break;
+    } catch (e) {
+      if (e instanceof InputError) {
+        console.log("Not a valid direction. Try again.");
+      } else {
+        throw e;
+      }
+    }
+  }
+  ```
+  {: .force-newline}
