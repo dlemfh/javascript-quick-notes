@@ -1067,7 +1067,7 @@ If you have a single character (a string of one or two code units), you can use 
   ```
   {: .force-newline}
 
-## (Misc.) The Date Class - JavaScript Class for Representing Dates
+## (Misc.) `Date` - JavaScript Class for Representing Dates
 
 - Current date and time
   ```js
