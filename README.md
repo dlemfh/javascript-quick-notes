@@ -1220,6 +1220,21 @@ If you have a single character (a string of one or two code units), you can use 
   - If the match was successful, the call to `exec` automatically updates the `lastIndex` property to point after the match. If no match was found, `lastIndex` is set back to zero, which is also the value it has in a newly constructed regular expression object.
     {: .force-newline}
 
+- Looping over matches
+  ```js
+  let input = "A string with 3 numbers in it... 42 and 88.";
+  let number = /\b\d+\b/g;
+
+  let match;
+  while (match = number.exec(input)) {
+    console.log("Found", match[0], "at", match.index);
+  }
+  // → Found 3 at 14
+  //   Found 42 at 33
+  //   Found 88 at 40
+  ```
+  {: .force-newline}
+
 - Word boundary (`\b`)
   ```js
   console.log(/cat/.test("concatenate"));
@@ -1228,6 +1243,20 @@ If you have a single character (a string of one or two code units), you can use 
   // → false
 
   // Note: A boundary marker doesn't match an actual character.
+  ```
+  {: .force-newline}
+
+- Unicode property (`\p`) \\
+  Unicode defines a number of useful properties, though finding the one that you need may not always be trivial. You can use the `\p{Property=Value}` notation to match any character that has the given value for that property. If the property name is left off, as in `\p{Name}`, the name is assumed to be either a binary property such as `Alphabetic` or a category such as `Number`.
+  ```js
+  console.log(/\p{Script=Greek}/u.test("α"));
+  // → true
+  console.log(/\p{Script=Arabic}/u.test("α"));
+  // → false
+  console.log(/\p{Alphabetic}/u.test("α"));
+  // → true
+  console.log(/\p{Alphabetic}/u.test("!"));
+  // → false
   ```
   {: .force-newline}
 
@@ -1254,6 +1283,15 @@ If you have a single character (a string of one or two code units), you can use 
     console.log(sticky.exec("xyz abc"));
     // → null
     ```
+  - `u`: unicode
+    ```js
+    console.log(/🍎{3}/.test("🍎🍎🍎"));
+    // → false
+    console.log(/<.>/.test("<🌹>"));
+    // → false
+    console.log(/<.>/u.test("<🌹>"));
+    // → true
+    ```
   - Constructing RegExp with flags
     ```js
     let name = "harry";
@@ -1262,3 +1300,47 @@ If you have a single character (a string of one or two code units), you can use 
     console.log(text.replace(regexp, "_$1_"));
     // → _Harry_ is a suspicious character.
     ```
+    {: .force-newline}
+
+- Caveats
+  - When using a shared regular expression value for multiple `exec` calls, these automatic updates to the `lastIndex` property can cause problems. Your regular expression might be accidentally starting at an index that was left over from a previous call.
+    ```js
+    let digit = /\d/g;
+    console.log(digit.exec("here it is: 1"));
+    // → ["1"]
+    console.log(digit.exec("and now: 1"));
+    // → null
+    ```
+  - Another interesting effect of the global option is that it changes the way the `match` method on strings works. When called with a global expression, instead of returning an array similar to that returned by `exec`, `match` will find *all* matches of the pattern in the string and return an array containing the matched strings.
+    ```js
+    console.log("Banana".match(/an/g));
+    // → ["an", "an"]
+    ```
+    {: .force-newline}
+
+## (Misc.) INI File Format
+
+- Example
+  ```
+  searchengine=https://duckduckgo.com/?q=$1
+  spitefulness=9.7
+
+  ; comments are preceded by a semicolon...
+  ; each section concerns an individual enemy
+  [larry]
+  fullname=Larry Doe
+  type=kindergarten bully
+  website=http://www.geocities.com/CapeCanaveral/11451
+
+  [davaeorn]
+  fullname=Davaeorn
+  type=evil wizard
+  outputdir=/home/marijn/enemies/davaeorn
+  ```
+  {: .force-newline}
+
+- Rules
+  - Blank lines and lines starting with semicolons are ignored.
+  - Lines wrapped in `[` and `]` start a new section.
+  - Lines containing an alphanumeric identifier followed by an `=` character add a setting to the current section.
+  - Anything else is invalid.
