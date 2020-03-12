@@ -317,6 +317,27 @@
     console.log(obj);
     // → {a: 1, b: 2, c: 2}
     ```
+  - Object.freeze
+    ```js
+    let obj = Object.freeze({value: 5});
+    obj.value = 10;
+    console.log(obj.value);
+    // → 5
+    ```
+
+- Cf. Combining objects using `...`
+  ```js
+  let o1 = {a: 1, b: 1};
+  let o2 = {b: 2, c: 2};
+  console.log({...o1, ...o2});
+  // → {a: 1, b: 2, c: 2}
+
+  let a1 = [1, 2];
+  let a2 = [3, 4];
+  console.log([...a1, ...a2]);
+  // → [1, 2, 3, 4]
+  ```
+  {: .force-newline}
 
 - The `Math` object
   - `Math.max(...)`
@@ -922,17 +943,6 @@ If you have a single character (a string of one or two code units), you can use 
 
 > Our project in this chapter is to build an automaton, a little program that performs a task in a virtual world. Our automaton will be a mail-delivery robot picking up and dropping off parcels.
 
-## (Misc.) Additional takeaways
-
-- Object.freeze
-  ```js
-  let object = Object.freeze({value: 5});
-  object.value = 10;
-  console.log(object.value);
-  // → 5
-  ```
-  {: .force-newline}
-
 ## 08. Bugs and Errors
 
 ### Strict mode
@@ -1067,7 +1077,7 @@ If you have a single character (a string of one or two code units), you can use 
   ```
   {: .force-newline}
 
-## (Misc.) `Date` - JavaScript Class for Representing Dates
+## (Misc.) JavaScript Class for Representing Dates
 
 - Current date and time
   ```js
@@ -1085,7 +1095,7 @@ If you have a single character (a string of one or two code units), you can use 
   ```
   {: .force-newline}
 
-- JavaScript uses a convention where **month numbers start at zero** (so December is 11), yet **day numbers start at one**. This is confusing and silly. Be careful!!!!!!! The last four arguments (hours, minutes, seconds, and milliseconds) to `Date` are optional and taken to be zero when not given.
+- JavaScript uses a convention where **month numbers start at zero** (so December is 11), yet **day numbers start at one**. This is confusing and silly. **Be careful!!!!!!!** The last four arguments (hours, minutes, seconds, and milliseconds) to `Date` are optional and taken to be zero when not given.
 
 - Timestamp ("Unix time") of current date and time
   ```js
@@ -1165,7 +1175,7 @@ If you have a single character (a string of one or two code units), you can use 
   ```
   {: .force-newline}
 
-- Cf. `string.match(/regex/)`: same as `/regex/.exec(string)`
+- `string.match(/regex/)`: same as `/regex/.exec(string)`
   ```js
   let m = "2020-1-31".match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
   console.log(m);
@@ -1173,7 +1183,7 @@ If you have a single character (a string of one or two code units), you can use 
   ```
   {: .force-newline}
 
-- Cf. `string.search()`: returns index of match or -1
+- `string.search()`: returns index of match or -1
   ```js
   console.log("  word".search(/\S/));
   // → 2
@@ -1182,7 +1192,7 @@ If you have a single character (a string of one or two code units), you can use 
   ```
   {: .force-newline}
 
-- Cf. `string.replace()`: returns new string
+- `string.replace()`: returns new string
   ```js
   console.log("Borobudur".replace(/[ou]/, "a"));
   // → Barobudur
@@ -1218,7 +1228,6 @@ If you have a single character (a string of one or two code units), you can use 
     // → 5
     ```
   - If the match was successful, the call to `exec` automatically updates the `lastIndex` property to point after the match. If no match was found, `lastIndex` is set back to zero, which is also the value it has in a newly constructed regular expression object.
-    {: .force-newline}
 
 - Looping over matches
   ```js
@@ -1246,7 +1255,7 @@ If you have a single character (a string of one or two code units), you can use 
   ```
   {: .force-newline}
 
-- Unicode property (`\p`) \\
+- Unicode property (`\p`): \\
   Unicode defines a number of useful properties, though finding the one that you need may not always be trivial. You can use the `\p{Property=Value}` notation to match any character that has the given value for that property. If the property name is left off, as in `\p{Name}`, the name is assumed to be either a binary property such as `Alphabetic` or a category such as `Number`.
   ```js
   console.log(/\p{Script=Greek}/u.test("α"));
@@ -1339,8 +1348,7 @@ If you have a single character (a string of one or two code units), you can use 
   ```
   {: .force-newline}
 
-- Rules
-  - Blank lines and lines starting with semicolons are ignored.
-  - Lines wrapped in `[` and `]` start a new section.
-  - Lines containing an alphanumeric identifier followed by an `=` character add a setting to the current section.
-  - Anything else is invalid.
+- Blank lines and lines starting with semicolons are ignored.
+- Lines wrapped in `[` and `]` start a new section.
+- Lines containing an alphanumeric identifier followed by an `=` character add a setting to the current section.
+- Anything else is invalid.
