@@ -1121,3 +1121,144 @@ If you have a single character (a string of one or two code units), you can use 
   // → 42
   ```
   {: .force-newline}
+
+## 09. Regular Expressions
+
+- RegExp object
+  ```js
+  let re1 = new RegExp("abc");
+  let re2 = /abc/;
+
+  console.log(re1.source == re2.source);
+  // → true
+  ```
+  {: .force-newline}
+
+- `test`: returns `true/false`
+  ```js
+  console.log(/abc/.test("0abcde"));
+  // → true
+  console.log(/abc/.test("0abxde"));
+  // → false
+  ```
+  {: .force-newline}
+
+- `exec`: returns a match object (array) or `null`
+  ```js
+  let match = /\d+/.exec("one two 100");
+  console.log(match);
+  // → ["100"]
+  console.log(match.index);
+  // → 8
+
+  let noMatch = /\d+/.exec("one two");
+  console.log(noMatch);
+  // → null
+  ```
+  {: .force-newline}
+
+- Match groups
+  ```js
+  let m = /(\d{4})-(\d{1,2})-(\d{1,2})/.exec("2020-1-31");
+  console.log(m);
+  // → ["2020-1-31", "2020", "1", "31"]
+  ```
+  {: .force-newline}
+
+- Cf. `string.match(/regex/)`: same as `/regex/.exec(string)`
+  ```js
+  let m = "2020-1-31".match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+  console.log(m);
+  // → ["2020-1-31", "2020", "1", "31"]
+  ```
+  {: .force-newline}
+
+- Cf. `string.search()`: returns index of match or -1
+  ```js
+  console.log("  word".search(/\S/));
+  // → 2
+  console.log("      ".search(/\S/));
+  // → -1
+  ```
+  {: .force-newline}
+
+- Cf. `string.replace()`: returns new string
+  ```js
+  console.log("Borobudur".replace(/[ou]/, "a"));
+  // → Barobudur
+  console.log("Borobudur".replace(/[ou]/g, "a"));
+  // → Barabadar
+  ```
+  {: .force-newline}
+
+- Referring to matched groups
+  ```js
+  console.log(
+    "Liskov, Barbara\nMcCarthy, John\nWadler, Philip"
+      .replace(/(\w+), (\w+)/g, "$2 $1"));
+  // → Barbara Liskov
+  //   John McCarthy
+  //   Philip Wadler
+
+  // Note: The whole match can be referred to with $&.
+  ```
+  {: .force-newline}
+
+- Matching from a given position
+  - Requirement: `exec` method, with global (`g`) or sticky (`y`) option enabled
+  - Using: the `lastIndex` property of the `RegExp` object
+    ```js
+    let pattern = /y/g;
+    pattern.lastIndex = 3;
+
+    let match = pattern.exec("xyzzy");
+    console.log(match.index);
+    // → 4
+    console.log(pattern.lastIndex);
+    // → 5
+    ```
+  - If the match was successful, the call to `exec` automatically updates the `lastIndex` property to point after the match. If no match was found, `lastIndex` is set back to zero, which is also the value it has in a newly constructed regular expression object.
+    {: .force-newline}
+
+- Word boundary (`\b`)
+  ```js
+  console.log(/cat/.test("concatenate"));
+  // → true
+  console.log(/\bcat\b/.test("concatenate"));
+  // → false
+
+  // Note: A boundary marker doesn't match an actual character.
+  ```
+  {: .force-newline}
+
+- Flags
+  - `i`: case-insensitive
+    ```js
+    let cartoonCrying = /boo+(hoo+)+/i;
+    console.log(cartoonCrying.test("Boohoooohoohooo"));
+    // → true
+    ```
+  - `g`: global
+    ```js
+    let s = "the cia and fbi";
+    console.log(s.replace(/\b(cia|fbi)\b/g,
+                str => str.toUpperCase()));
+    // → the CIA and FBI
+    ```
+  - `y`: sticky (no lookahead)
+    ```js
+    let normal = /abc/;
+    console.log(normal.exec("xyz abc"));
+    // → ["abc"]
+    let sticky = /abc/y;
+    console.log(sticky.exec("xyz abc"));
+    // → null
+    ```
+  - Constructing RegExp with flags
+    ```js
+    let name = "harry";
+    let text = "Harry is a suspicious character.";
+    let regexp = new RegExp("\\b(" + name + ")\\b", "gi");
+    console.log(text.replace(regexp, "_$1_"));
+    // → _Harry_ is a suspicious character.
+    ```
