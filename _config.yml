@@ -1,0 +1,31 @@
+title: JavaScript Quick-Notes
+email: dlemfh96@gmail.com
+
+repository: dlemfh/javascript-quick-notes
+logo: /favicon.ico
+
+remote_theme: mmistakes/minimal-mistakes
+minimal_mistakes_skin: air
+
+footer:
+  links:
+    - label: "GitHub"
+      icon: "fab fa-fw fa-github"
+      url: "https://github.com/dlemfh/javascript-quick-notes"
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: single-plus
+      toc: true
+      toc_label: Table of Contents
+      # toc_sticky: true
+
+plugins:
+  - jekyll-github-metadata
+  - jekyll-paginate
+  - jekyll-sitemap
+  - jekyll-gist
+  - jekyll-feed
+  - jekyll-include-cache
