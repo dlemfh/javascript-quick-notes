@@ -1,4 +1,7 @@
-> Based on **[Eloquent JavaScript](https://eloquentjavascript.net)** by [Marijn Haverbeke](https://github.com/marijnh/Eloquent-JavaScript).
+| Based on the following sources: |
+| ------------------------------- |
+| **[Eloquent JavaScript](https://eloquentjavascript.net)** by [Marijn Haverbeke](https://github.com/marijnh/Eloquent-JavaScript) |
+| **[MDN Web Docs](https://developer.mozilla.org/en-US/)** |
 
 ## 01. Values, Types, and Operators
 
@@ -462,7 +465,7 @@ If you have a single character (a string of one or two code units), you can use 
 
 ### Encapsulation
 
-- In JavaScript, it is common to put an underscore (`_`) character at the start of property names to indicate that those properties are *private*. (Although this doesn't actually prevent anyone from accessing them.)
+- In JavaScript, it is common to put an underscore (`_`) character at the start of property names to indicate that those properties are *private*. (Although this doesn't actually prevent access.)
 
 ### Methods
 
@@ -540,7 +543,7 @@ If you have a single character (a string of one or two code units), you can use 
 
 ### Classes
 
-- Class notation (post-2015 JavaScript)
+- Class notation (introduced in ECMAScript 2015)
   ```js
   class Rabbit {
     constructor(type) {
@@ -563,7 +566,7 @@ If you have a single character (a string of one or two code units), you can use 
   // → true
   ```
 
-- Class declarations currently allow only *methods* to be added to the prototype. Add non-function properties or *attributes* by directly manipulating the prototype after defining the class.
+- Class declarations currently allow only *methods* to be added to the prototype. (While instance properties may be declared within the constructor, other class-level attributes can only be added by directly manipulating the prototype after defining the class.)
   ```js
   Rabbit.prototype.teeth = "small";
 
@@ -573,7 +576,14 @@ If you have a single character (a string of one or two code units), you can use 
 
 - As in the example above, beware that *attributes added to the class after instance creation will still affect previously created instances.* (This is because properties not found in an object are looked for in its prototype.)
 
-- Dynamic type creation
+- While function declarations are hoisted, class declarations are not. (You first need to declare your class and then access it, otherwise code like the following will throw a `ReferenceError`.)
+  ```js
+  let r = new Rectangle(); // ReferenceError
+
+  class Rectangle {}
+  ```
+
+- Using class expression to instantiate an object dynamically
   ```js
   let obj = new class { getWord() { return "hello"; } };
   console.log(obj.getWord());
@@ -605,67 +615,6 @@ If you have a single character (a string of one or two code units), you can use 
   // → long, sharp, and bloody
   console.log(Object.getPrototypeOf(killerRabbit).teeth);
   // → small
-  ```
-
-### Maps
-
-- A *map* (noun) is a data structure that associates keys with values. (For example, you might want to map names to ages.) It is possible to use objects for this, although there is a liability regarding derived properties.
-  ```js
-  let ages = {
-    Boris: 39,
-    Liang: 22,
-    Julia: 62
-  };
-
-  console.log(`Julia is ${ages["Julia"]}`);
-  // → Julia is 62
-
-  console.log("Jack" in ages);
-  // → false
-  console.log("toString" in ages);
-  // → true
-  ```
-
-- There are several possible ways to avoid this problem. First, as an alternative to the `in` operator, you can use the `hasOwnProperty` method, which ignores the object’s prototype.
-  ```js
-  console.log(ages.hasOwnProperty("Jack"));
-  // → false
-  console.log(ages.hasOwnProperty("toString"));
-  // → false
-  ```
-
-- It’s also useful to know that `Object.keys` returns only an object’s *own* keys, not those in the prototype.
-  ```js
-  console.log(Object.keys(ages));
-  // → ["Boris", "Liang", "Julia"]
-  ```
-
-- However, you may rather want to create an object with *no* prototype. If you pass `null` to `Object.create`, the resulting object will not derive from `Object.prototype` and can safely be used as a map.
-  ```js
-  console.log("toString" in Object.create(null));
-  // → false
-  ```
-
-- BTW, you can use `Object.create` to create an object using some other object as a prototype.
-  ```js
-  let obj = Object.create({a: 1, b: 2, c: 3, f: Math.max});
-  console.log(obj.f(obj.a, obj.b, obj.c));
-  // → 3
-  ```
-
-- JavaScript ships with a class called *Map*, that is interfaced with methods: `get`, `set`, `has`, etc.
-  ```js
-  let ages = new Map();
-  ages.set("Boris", 39);
-  ages.set("Liang", 22);
-  ages.set("Julia", 62);
-
-  console.log(`Julia is ${ages.get("Julia")}`);
-  // → Julia is 62
-  console.log(ages.has("Jack"));
-  // → false
-  console.log(ages.has("toString"));
-  // → false
   ```
 
 ### Polymorphism
@@ -727,7 +676,7 @@ If you have a single character (a string of one or two code units), you can use 
   // → 86
   ```
 
-- Inside a class declaration, methods that have `static` written before their name are stored on the constructor. So the `Temperature` class above allows you to write `Temperature.fromFahrenheit(100)` to initialize a temperature using degrees Fahrenheit. (Unlike Java, static methods are not passed on to the individual class instances.)
+- Static methods, defined using the `static` keyword, are stored on the constructor. (So the `Temperature` class above provides a factory function to initialize a temperature using degrees Fahrenheit, as in `Temperature.fromFahrenheit(100)`.) *Unlike Java, static methods are not passed on to the individual class instances.*
 
 ### Inheritance
 
@@ -763,6 +712,67 @@ If you have a single character (a string of one or two code units), you can use 
   console.log(new SymmetricMatrix(2) instanceof Matrix);
   // → true
   console.log(new Matrix(2, 2) instanceof SymmetricMatrix);
+  // → false
+  ```
+
+## (Misc.) Maps
+
+- A *map* (noun) is a data structure that associates keys with values. (For example, you might want to map names to ages.) It is possible to use objects for this, although there is a liability regarding derived properties.
+  ```js
+  let ages = {
+    Boris: 39,
+    Liang: 22,
+    Julia: 62
+  };
+
+  console.log(`Julia is ${ages["Julia"]}`);
+  // → Julia is 62
+
+  console.log("Jack" in ages);
+  // → false
+  console.log("toString" in ages);
+  // → true
+  ```
+
+- There are several possible ways to avoid this problem. First, as an alternative to the `in` operator, you can use the `hasOwnProperty` method, which ignores the object’s prototype.
+  ```js
+  console.log(ages.hasOwnProperty("Jack"));
+  // → false
+  console.log(ages.hasOwnProperty("toString"));
+  // → false
+  ```
+
+- It’s also useful to know that `Object.keys` returns only an object’s *own* keys, not those in the prototype.
+  ```js
+  console.log(Object.keys(ages));
+  // → ["Boris", "Liang", "Julia"]
+  ```
+
+- However, you may rather want to create an object with *no* prototype. If you pass `null` to `Object.create`, the resulting object will not derive from `Object.prototype` and can safely be used as a map.
+  ```js
+  console.log("toString" in Object.create(null));
+  // → false
+  ```
+
+- BTW, you can use `Object.create` to create an object using some other object as a prototype.
+  ```js
+  let obj = Object.create({a: 1, b: 2, c: 3, f: Math.max});
+  console.log(obj.f(obj.a, obj.b, obj.c));
+  // → 3
+  ```
+
+- JavaScript ships with a class called *Map*, that is interfaced with methods: `get`, `set`, `has`, etc.
+  ```js
+  let ages = new Map();
+  ages.set("Boris", 39);
+  ages.set("Liang", 22);
+  ages.set("Julia", 62);
+
+  console.log(`Julia is ${ages.get("Julia")}`);
+  // → Julia is 62
+  console.log(ages.has("Jack"));
+  // → false
+  console.log(ages.has("toString"));
   // → false
   ```
 
