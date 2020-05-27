@@ -1,7 +1,11 @@
 | Based on the following sources: |
 | ------------------------------- |
-| **[Eloquent JavaScript](https://eloquentjavascript.net)** by [Marijn Haverbeke](https://github.com/marijnh/Eloquent-JavaScript) |
-| **[MDN Web Docs](https://developer.mozilla.org/en-US/)** |
+| **[Eloquent JavaScript]** by [Marijn Haverbeke]. |
+| **[MDN Web Docs].** |
+
+[Eloquent JavaScript]: https://eloquentjavascript.net
+[Marijn Haverbeke]: https://github.com/marijnh/Eloquent-JavaScript
+[MDN Web Docs]: https://developer.mozilla.org/en-US/
 
 ## 01. Values, Types, and Operators
 
