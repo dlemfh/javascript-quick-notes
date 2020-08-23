@@ -498,7 +498,7 @@ If you have a single character (a string of one or two code units), you can use 
   // → The hungry rabbit says 'I could use a carrot right now.'
   ```
 
-- You can think of `this` as an extra parameter that is passed in a different way. If you want to pass it explicitly, use the function’s `call` method, which takes the `this` value as its first argument and treats further arguments as normal parameters.
+- You can think of `this` as an extra parameter that is passed in a different way. (If you want to pass it explicitly, use the function’s `call` method, which takes the `this` value as its first argument and treats further arguments as normal parameters.)
   ```js
   speak.call({type: "well-eaten"}, "Burp!");
   // → The well-eaten rabbit says 'Burp!'
@@ -570,7 +570,7 @@ If you have a single character (a string of one or two code units), you can use 
   // → true
   ```
 
-- Class declarations currently allow only *methods* to be added to the prototype. (While instance properties may be declared within the constructor, other class-level attributes can only be added by directly manipulating the prototype after defining the class.)
+- Class declarations currently allow only *methods* to be added to the prototype. (Instance attributes can be declared within the constructor, while class-level attributes can only be added by directly manipulating the prototype after defining the class.)
   ```js
   Rabbit.prototype.teeth = "small";
 
@@ -578,20 +578,13 @@ If you have a single character (a string of one or two code units), you can use 
   // → small
   ```
 
-- As in the example above, beware that *attributes added to the class after instance creation will still affect previously created instances.* (This is because properties not found in an object are looked for in its prototype.)
+- As can be seen above, beware that *properties added to the prototype after instance creation will still affect previously created instances.* (This is because properties not found in an object are looked for in its prototype.)
 
 - While function declarations are hoisted, class declarations are not. (You first need to declare your class and then access it, otherwise code like the following will throw a `ReferenceError`.)
   ```js
   let r = new Rectangle(); // ReferenceError
 
   class Rectangle {}
-  ```
-
-- Using class expression to instantiate an object dynamically
-  ```js
-  let obj = new class { getWord() { return "hello"; } };
-  console.log(obj.getWord());
-  // → hello
   ```
 
 ### Overriding derived properties
